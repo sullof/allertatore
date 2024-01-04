@@ -12,6 +12,8 @@ for (let event of events.calendar) {
     event.utcDateTime = date.toISOString();
 }
 
+console.log(events);
+
 // Express server to handle dynamic TwiML responses
 app.use(express.urlencoded({ extended: false }));
 
@@ -66,6 +68,8 @@ let now = Date.now();
 for (let event of events.calendar) {
     let when = new Date(event.utcDateTime);
     let ts = when.getTime();
+    console.log(now)
+    console.log(ts);
     if (ts - min15 > now) {
         (function (event, when) {
             when.setHours(when.getHours() - 8);
