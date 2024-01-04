@@ -125,3 +125,4 @@ src/config/deployedForTest.json
 /tmp
 /scripts/tmp
 /local-db
+/pnpm-lock.yaml
