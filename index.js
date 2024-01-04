@@ -6,15 +6,10 @@ const twilio = require('twilio');
 const client = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 const events = require('./events');
-
-function convertToUTC(dateString, timeString) {
-    const combinedDateTime = `${dateString}T${timeString}:00`;
-    let date = new Date(combinedDateTime);
-    return date.toISOString();
-}
-
 for (let event of events.calendar) {
-    event.utcDateTime = convertToUTC(event.date, event.time);
+    const combinedDateTime = `${event.date}T${event.time}:00`;
+    let date = new Date(combinedDateTime);
+    event.utcDateTime = date.toISOString();
 }
 
 // Express server to handle dynamic TwiML responses
