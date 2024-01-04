@@ -72,7 +72,7 @@ let now = Date.now();
 for (let event of events.calendar) {
     let when = new Date(event.utcDateTime);
     let ts = when.getTime();
-    if (ts > now) {
+    if (ts - min15 > now) {
         (function (event, when) {
             when.setHours(when.getHours() - 8);
             console.log("Scheduling " + event.title + " at " + when.toString());
