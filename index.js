@@ -83,7 +83,7 @@ app.listen(3210, () => {
         const at = when.toLocaleString('en-US', { timeZone: event.timezone });
         for (let o of offset) {
             if (ts - o > now) {
-                console.log("\nScheduling: " + event.title + "\nat " + at + ", offset " + o/60000 + " minutes");
+                console.log("\nScheduling: " + event.title + "\nat " + at + " (" + event.timezone + "), offset " + o/60000 + " minutes");
                 schedule(ts, event, when, o);
             }
         }
