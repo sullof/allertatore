@@ -3,7 +3,7 @@
 docker stop allertatore
 docker rm allertatore
 
-docker run -d \
+source .env && docker run -d \
   --name allertatore \
   -p 3210 \
   --restart unless-stopped \
