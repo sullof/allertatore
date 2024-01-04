@@ -9,7 +9,7 @@ const events = require('./events');
 for (let event of events.calendar) {
     const combinedDateTime = `${event.date}T${event.time}:00`;
     let date = new Date(combinedDateTime);
-    date.setHours(date.getHours() - 8);
+    date.setHours(date.getHours() + 8);
     event.utcDateTime = date.toISOString();
 }
 
