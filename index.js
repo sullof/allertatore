@@ -65,26 +65,22 @@ function makeReminderCall(event) {
         .catch(error => console.error(error));
 }
 
-function checkCalendarEvents(title, time) {
-    // Implement your calendar checking logic here
-    // For example, if an event is soon:
-    makeReminderCall({ title, time }); // Replace with actual event details
-}
-
 const min15 = 15 * 60 * 1000;
 
 let now = Date.now();
 
 for (let event of events.calendar) {
-    let when = new Date(event.utcDateTime).getTime();
+    let when = new Date(event.utcDateTime);
     let ts = when.getTime();
     if (ts > now) {
-        (function (title, utcDateTime) {
+        (function (event, when) {
             when.setHours(when.getHours() - 8);
-            console.log("Scheduling " + title + " at " + when.toString());
+            console.log("Scheduling " + event.title + " at " + when.toString());
             setTimeout(() => {
-                checkCalendarEvents(title, utcDateTime);
+                makeReminderCall(event);
             }, ts - now - min15);
-        })(event.title, event.utcDateTime);
+        })(event, when);
     }
 }
+
+console.log("Server started");
