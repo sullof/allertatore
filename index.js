@@ -46,7 +46,8 @@ app.listen(3210, () => {
 });
 
 function makeReminderCall(event) {
-    console.log("Calling in relation to " + event.title);
+    console.log("Calling in relation to");
+    console.log(event);
     let eventDetails = `You have an event titled ${event.title} at ${event.date}, ${event.time}.`; // Customize this line as needed
     client.calls
         .create({
