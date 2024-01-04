@@ -1,9 +1,9 @@
 const events = {
     calendar: [
         {
-            title: 'Call with Federico',
+            title: 'Call with Andy and Mack',
             date: '2024-01-03',
-            time: '16:35'
+            time: '17:15'
         },
         {
             title: 'Call with Federico',
