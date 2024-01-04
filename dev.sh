@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source .env && docker run -it --rm \
-  --name api-cruna-cc-dev \
+  --name allertatore-dev \
   -p 3210 \
   -v $PWD:/usr/src/app \
   -v $PWD/log:/var/log/allertatore \
