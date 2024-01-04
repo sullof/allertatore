@@ -57,7 +57,7 @@ function makeReminderCall(event) {
     let eventDetails = `You have an event titled ${event.title} at ${event.date}, ${event.time}.`; // Customize this line as needed
     client.calls
         .create({
-            url: `https://tru.sullo.co/twiml?eventDetails=${encodeURIComponent(eventDetails)}`, // Replace with your server address
+            url: `https://${process.env.SERVER}/twiml?eventDetails=${encodeURIComponent(eventDetails)}`, // Replace with your server address
             to: process.env.RECEIVER,
             from: process.env.TWILIO_PHONE_NUMBER
         })
