@@ -126,3 +126,4 @@ src/config/deployedForTest.json
 /scripts/tmp
 /local-db
 /pnpm-lock.yaml
+events.js
