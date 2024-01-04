@@ -6,7 +6,7 @@ const twilio = require('twilio');
 const client = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 // TODO, this file is hidden, look at sample.env.events for an example
-const events = require('./events.js');
+const events = require('./events');
 for (let event of events.calendar) {
     const combinedDateTime = `${event.date}T${event.time}:00`;
     let date = new Date(combinedDateTime);
