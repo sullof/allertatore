@@ -3,7 +3,7 @@ const events = {
         {
             title: 'Call with Andy and Mack',
             date: '2024-01-03',
-            time: '17:15'
+            time: '17:35'
         },
         {
             title: 'Call with Federico',

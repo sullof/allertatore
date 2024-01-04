@@ -17,9 +17,6 @@ for (let event of events.calendar) {
     event.utcDateTime = convertToUTC(event.date, event.time);
 }
 
-console.log(events);
-
-
 // Express server to handle dynamic TwiML responses
 app.use(express.urlencoded({ extended: false }));
 
