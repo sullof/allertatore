@@ -50,8 +50,8 @@ app.get("/", (req, res) => {
 function makeReminderCall(event, when) {
     console.log("Calling in relation to");
     console.log(event);
-    let minutes = Math.floor((when.getTime() - Date.now()) / 60000);
     const day = new Date(event.utcDateTime);
+    let minutes = Math.floor((day.getTime() - Date.now()) / 60000);
     let eventDetails = `You have an event titled "${event.title}" on ${day.toLocaleString('en-US', { timeZone: event.timezone })}. Let me repeat. You have an event titled "${event.title}" in ${minutes} minutes`; // Customize this line as needed
     client.calls
         .create({
