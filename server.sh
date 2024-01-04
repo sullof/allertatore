@@ -13,4 +13,4 @@ source .env && docker run -d \
   -e VIRTUAL_HOST=$SERVER \
   -e LETSENCRYPT_HOST=$SERVER \
   -e LETSENCRYPT_EMAIL=$EMAIL \
-  -w /usr/src/app node:16 npm run start
+  -w /usr/src/app node:20 npm run start
