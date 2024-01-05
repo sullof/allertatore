@@ -19,7 +19,7 @@ for (let event of events.calendar) {
 }
 
 // Express server to handle dynamic TwiML responses
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 
 app.post('/twiml', (req, res) => {
     const eventDetails = req.query.eventDetails; // Get event details from query parameter
@@ -33,7 +33,7 @@ app.post('/twiml', (req, res) => {
 
     let response = new twilio.twiml.VoiceResponse();
     response.say(`Reminder: ${eventDetails}`);
-    response.pause({ length: 1 });
+    response.pause({length: 1});
     response.say('Have a great day!');
 
     res.type('text/xml');
@@ -51,11 +51,15 @@ function makeReminderCall(event, when) {
     console.log("Calling in relation to");
     console.log(event);
     const day = new Date(event.utcDateTime);
-    let minutes = Math.floor((day.getTime() - Date.now()) / 60000);
-    let eventDetails = `You have an event titled "${event.title}" on ${day.toLocaleString('en-US', { timeZone: event.timezone })}. Let me repeat. You have an event titled "${event.title}" in ${minutes} minutes`; // Customize this line as needed
+    let minutes = Math.floor((day.getTime() - Date.now()) / 60000) + " minutes";
+    if (minutes > 59) {
+        let hours = Math.floor(minutes / 60);
+        minutes = hours + " hour" + (hours > 1 ? "s" : "") + " and " + (minutes % 60) + " minutes";
+    }
+    let eventDetails = `You have an event titled "${event.title}" in ${minutes}. Let me repeat. You have an event titled "${event.title}" in ${minutes} `; // Customize this line as needed
     client.calls
         .create({
-            url: `https://${process.env.SERVER}/twiml?eventDetails=${encodeURIComponent(eventDetails)}`, // Replace with your server address
+            url: `https://${process.env.SERVER}/twiml?eventDetails=${encodeURIComponent(eventDetails)}`,
             to: process.env.RECEIVER,
             from: process.env.TWILIO_PHONE_NUMBER
         })
@@ -80,10 +84,10 @@ app.listen(3210, () => {
         if (event.offset) {
             offset = event.offset.map(e => e * oneMinute);
         }
-        const at = when.toLocaleString('en-US', { timeZone: event.timezone });
+        const at = when.toLocaleString('en-US', {timeZone: event.timezone});
         for (let o of offset) {
             if (ts - o > now) {
-                console.log("\nScheduling: " + event.title + "\nat " + at + " (" + event.timezone + "), offset " + o/60000 + " minutes");
+                console.log("\nScheduling: " + event.title + "\nat " + at + " (" + event.timezone + "), offset " + o / 60000 + " minutes");
                 schedule(ts, event, when, o);
             }
         }
