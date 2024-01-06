@@ -30,11 +30,10 @@ app.post('/twiml', (req, res) => {
         });
         return;
     }
-
     let response = new twilio.twiml.VoiceResponse();
-    response.say(`Reminder: ${eventDetails}`);
+    response.say({ voice: 'alice' }, `Reminder: ${eventDetails}`);
     response.pause({length: 1});
-    response.say('Have a great day!');
+    response.say({ voice: 'alice' }, 'Have a great day!');
 
     res.type('text/xml');
     res.send(response.toString());
@@ -46,6 +45,19 @@ app.get("/", (req, res) => {
         hello: "World!"
     });
 })
+
+async function getCallCost(phoneNumber) {
+    // TODO cache it in a DB
+    try {
+        const numberInfo = await client.lookups.v1.phoneNumbers(phoneNumber)
+            .fetch({type: ['carrier']});
+        const prices = await client.pricing.v2.voice.numbers(phoneNumber)
+            .fetch({countryCode: numberInfo.countryCode});
+        console.log(`Call cost to ${phoneNumber}: ${prices.outboundCallPrice.currentPrice}`);
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 function makeReminderCall(event, when) {
     console.log("Calling in relation to");
