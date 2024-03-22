@@ -50,6 +50,7 @@ app.get("/", (req, res) => {
 function makeReminderCall(event, when) {
     console.log("Calling in relation to");
     console.log(event);
+    return;
     const day = new Date(event.utcDateTime);
     let minutes = Math.floor((day.getTime() - Date.now()) / 60000) + " minutes";
     if (minutes > 59) {
@@ -69,11 +70,18 @@ function makeReminderCall(event, when) {
 
 function schedule(ts, event, when, offset) {
     when.setHours(when.getHours() - 8);
-    setTimeout(() => {
-        makeReminderCall(event, when);
-    }, ts - now - offset);
+    let ms = ts - Date.now() - offset;
+    if (ms > 2073600000) {
+        console.log("TimeoutOverflowWarning. Will call again in 24 days");
+        setTimeout(function() {
+            schedule(ts, event, when, offset);
+        }, 2073600000);
+    } else {
+        setTimeout(() => {
+            makeReminderCall(event, when);
+        }, ms);
+    }
 }
-
 
 app.listen(3210, () => {
     console.log('Express server running on port 3210');
