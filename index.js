@@ -9,7 +9,6 @@ const client = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUT
 // TODO, this file is hidden, look at sample.env.events for an example
 const events = require('./events');
 
-const now = new Date();
 const oneMinute = 60 * 1000;
 
 for (let event of events.calendar) {
@@ -94,7 +93,7 @@ app.listen(3210, () => {
         }
         const at = when.toLocaleString('en-US', {timeZone: event.timezone});
         for (let o of offset) {
-            if (ts - o > now) {
+            if (ts - o > Date.now()) {
                 console.log("\nScheduling: " + event.title + "\nat " + at + " (" + event.timezone + "), offset " + o / 60000 + " minutes");
                 schedule(ts, event, when, o);
             }
