@@ -7,4 +7,4 @@ source .env && docker run -it --rm \
   -v $PWD/log:/var/log/allertatore \
   -e NODE_ENV=development \
   -e VIRTUAL_HOST=$SERVER \
-  -w /usr/src/app node:16 npm run start
+  -w /usr/src/app node:22 npm run start

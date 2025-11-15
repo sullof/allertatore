@@ -29,8 +29,8 @@ app.post('/twiml', (req, res) => {
         });
         return;
     }
-
     let response = new twilio.twiml.VoiceResponse();
+    console.log("eventDetails", eventDetails);
     response.say(`Reminder: ${eventDetails}`);
     response.pause({length: 1});
     response.say('Have a great day!');
@@ -46,25 +46,37 @@ app.get("/", (req, res) => {
     });
 })
 
+function humanizeMinutes(minutesUntil) {
+    if (minutesUntil <= 0) {
+        return "a few moments";
+    }
+    if (minutesUntil < 60) {
+        return `${minutesUntil} minute${minutesUntil === 1 ? "" : "s"}`;
+    }
+    const hours = Math.floor(minutesUntil / 60);
+    const minutes = minutesUntil % 60;
+    let parts = [`${hours} hour${hours === 1 ? "" : "s"}`];
+    if (minutes) {
+        parts.push(`${minutes} minute${minutes === 1 ? "" : "s"}`);
+    }
+    return parts.join(" and ");
+}
+
 function makeReminderCall(event, when) {
-    // console.log("Calling in relation to");
-    // console.log(event);
-    // return;
-    const day = new Date(event.utcDateTime);
-    let minutes = Math.floor((day.getTime() - Date.now()) / 60000) + " minutes";
-    if (minutes > 59) {
-        let hours = Math.floor(minutes / 60);
-        minutes = hours + " hour" + (hours > 1 ? "s" : "") + " and " + (minutes % 60) + " minutes";
-    }
-    let eventDetails = `You have an event titled "${event.title}" in ${minutes}. Let me repeat. You have an event titled "${event.title}" in ${minutes} `; // Customize this line as needed
-    if (/\.local$/.test(process.env.SERVER)) {
-        protocol = "http";
-    } else {
-        protocol = "https";
-    }
+    console.log("Calling in relation to");
+    console.log(event);
+    const eventMoment = moment.tz(event.date, event.timezone);
+    const minutesUntil = Math.max(0, Math.round((eventMoment.toDate().getTime() - Date.now()) / 60000));
+    const humanizedMinutes = humanizeMinutes(minutesUntil);
+    const formattedDate = eventMoment.format('MMMM Do, YYYY [at] HH:mm');
+    let eventDetails = `You have an event titled "${event.title}" on ${formattedDate}, in ${humanizedMinutes}. Let me repeat. You have an event titled "${event.title}" on ${formattedDate}, in ${humanizedMinutes}`;
+   
+    // for debugging, uncomment the following line
+    // return; 
+
     client.calls
         .create({
-            url: `${protocol}://${process.env.SERVER}/twiml?eventDetails=${encodeURIComponent(eventDetails)}`,
+            url: `https://${process.env.SERVER}/twiml?eventDetails=${encodeURIComponent(eventDetails)}`,
             to: process.env.RECEIVER,
             from: process.env.TWILIO_PHONE_NUMBER
         })
