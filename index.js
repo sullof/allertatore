@@ -47,9 +47,9 @@ app.get("/", (req, res) => {
 })
 
 function makeReminderCall(event, when) {
-    console.log("Calling in relation to");
-    console.log(event);
-    return;
+    // console.log("Calling in relation to");
+    // console.log(event);
+    // return;
     const day = new Date(event.utcDateTime);
     let minutes = Math.floor((day.getTime() - Date.now()) / 60000) + " minutes";
     if (minutes > 59) {
@@ -57,9 +57,14 @@ function makeReminderCall(event, when) {
         minutes = hours + " hour" + (hours > 1 ? "s" : "") + " and " + (minutes % 60) + " minutes";
     }
     let eventDetails = `You have an event titled "${event.title}" in ${minutes}. Let me repeat. You have an event titled "${event.title}" in ${minutes} `; // Customize this line as needed
+    if (/\.local$/.test(process.env.SERVER)) {
+        protocol = "http";
+    } else {
+        protocol = "https";
+    }
     client.calls
         .create({
-            url: `https://${process.env.SERVER}/twiml?eventDetails=${encodeURIComponent(eventDetails)}`,
+            url: `${protocol}://${process.env.SERVER}/twiml?eventDetails=${encodeURIComponent(eventDetails)}`,
             to: process.env.RECEIVER,
             from: process.env.TWILIO_PHONE_NUMBER
         })
